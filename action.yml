@@ -24,7 +24,7 @@ runs:
   using: "composite"
   steps:
     - name: Send GitHub Discussion Notification to Slack
-      if: ${{ github.event.discussion && !github.event.comment && send-discussion }}
+      if: ${{ github.event.discussion && !github.event.comment && inputs.send-discussion }}
       # Note: 
       # - 一度変数に入れることで、$や`をエスケープしている
       # - https://stackoverflow.com/questions/69982822/is-there-a-way-to-escape-and-single-quotes-together-in-bash
@@ -49,7 +49,7 @@ runs:
         USER_URL: ${{ github.event.discussion.user.html_url }}
         USER_NAME: ${{ github.event.discussion.user.login }}
     - name: Send GitHub Discussions Comment Notification to Slack
-      if: ${{ github.event.comment && send-discussion-comment }}
+      if: ${{ github.event.comment && inputs.send-discussion-comment }}
       run: |
         title=$(cat << "EOF"
         ${{ env.DISCUSSION_TITLE }}
