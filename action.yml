@@ -14,11 +14,19 @@ inputs:
   send-discussion:
     description: 'send discussion create notification?'
     required: false
-    default: false
+    default: true
   send-discussion-comment:
     description: 'send discussion comment notification?'
     required: false
     default: true
+  unfurl-links:
+    description: 'Pass true to enable unfurling of primarily text-based content.'
+    required: false
+    default: false
+  unfurl-media:
+    description: 'Pass false to disable unfurling of media content.'
+    required: false
+    default: false
 
 runs:
   using: "composite"
@@ -41,7 +49,36 @@ runs:
         EOF
         )
         printf -v markdown_message_unescaped %b "<${{ env.DISCUSSION_URL }}|*$title*>\n$body"
-        jq -n -r --arg text "$markdown_message_unescaped" '{"token":"${{ inputs.SLACK_BOT_TOKEN }}","channel":"${{ inputs.SLACK_CHANNEL_ID }}","blocks":[{"type":"section","text":{"type":"mrkdwn","text":"New Discussion by <${{ env.USER_URL }}|${{ env.USER_NAME }}>"}}],"attachments":[{"blocks":[{"type":"section","text":{"type":"mrkdwn","text":$text}}]}]}'|curl -X POST -H 'Authorization: Bearer ${{ inputs.SLACK_BOT_TOKEN }}' -H "Content-Type: application/json" -d @- https://slack.com/api/chat.postMessage
+        jq -n -r --arg text "$markdown_message_unescaped" '{
+          "token":"${{ inputs.SLACK_BOT_TOKEN }}",
+          "channel":"${{ inputs.SLACK_CHANNEL_ID }}",
+          "blocks":[
+            {
+              "type":"section",
+              "text":{
+                "type":"mrkdwn",
+                "text":"New Discussion by <${{ env.USER_URL }}|${{ env.USER_NAME }}>"
+              }
+            }
+          ],
+          "attachments":[
+            {
+              "blocks":[
+                {
+                  "type":"section",
+                  "text":{
+                    "type":"mrkdwn",
+                    "text":$text
+                  }
+                }
+              ]
+            }
+          ],
+          "unfurl_links": ${{ inputs.unfurl-links }},
+          "unfurl_media": ${{ inputs.unfurl-media }}
+        }'
+        |curl -X POST -H 'Authorization: Bearer ${{ inputs.SLACK_BOT_TOKEN }}' -H "Content-Type: application/json" -d @- https://slack.com/api/chat.postMessage
+      shell: bash
       env:
         DISCUSSION_URL: ${{ github.event.discussion.html_url }}
         DISCUSSION_TITLE: ${{ github.event.discussion.title }}
@@ -60,7 +97,36 @@ runs:
         EOF
         )
         printf -v markdown_message_unescaped %b "*<${{ env.COMMENT_URL }}|Comment on $title>*\n$body"
-        jq -n -r --arg text "$markdown_message_unescaped" '{"token":"${{ inputs.SLACK_BOT_TOKEN }}","channel":"${{ inputs.SLACK_CHANNEL_ID }}","blocks":[{"type":"section","text":{"type":"mrkdwn","text":"New comment by <${{ env.USER_URL }}|${{ env.USER_NAME }}>"}}],"attachments":[{"blocks":[{"type":"section","text":{"type":"mrkdwn","text":$text}}]}]}'|curl -X POST -H 'Authorization: Bearer ${{ inputs.SLACK_BOT_TOKEN }}' -H "Content-Type: application/json" -d @- https://slack.com/api/chat.postMessage
+        jq -n -r --arg text "$markdown_message_unescaped" '{
+          "token":"${{ inputs.SLACK_BOT_TOKEN }}",
+          "channel":"${{ inputs.SLACK_CHANNEL_ID }}",
+          "blocks":[
+            {
+              "type":"section",
+              "text":{
+                "type":"mrkdwn",
+                "text":"New comment by <${{ env.USER_URL }}|${{ env.USER_NAME }}>"
+              }
+            }
+          ],
+          "attachments":[
+            {
+              "blocks":[
+                {
+                  "type":"section",
+                  "text":{
+                    "type":"mrkdwn",
+                    "text":$text
+                  }
+                }
+              ]
+            }
+          ],
+          "unfurl_links": ${{ inputs.unfurl-links }},
+          "unfurl_media": ${{ inputs.unfurl-media }}
+        }
+        '|curl -X POST -H 'Authorization: Bearer ${{ inputs.SLACK_BOT_TOKEN }}' -H "Content-Type: application/json" -d @- https://slack.com/api/chat.postMessage
+      shell: bash
       env:
         DISCUSSION_TITLE: ${{ github.event.discussion.title }}
         COMMENT_URL: ${{ github.event.comment.html_url }}
