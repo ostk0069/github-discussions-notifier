@@ -13,24 +13,46 @@ Learn how to use this template at [Wiki](https://github.com/snow-actions/composi
 ### Basic
 
 ```yml
-steps:
-  - uses: snow-actions/composite-action-template@v1.0.0
+name: GitHub Discussions Notifier
+
+on:
+  discussion:
+    types: [created]
+  discussion_comment:
+    types: [created]
+    
+jobs:
+  notify-github-discussions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ostk0069/github-discussions-notifier@v0.0.1
+        with:
+          SLACK_CHANNEL_ID: <your slack channel id>
+          SLACK_BOT_TOKEN: <your slack bot token>
 ```
 
 ### Optional
 
 ```yml
-steps:
-  - uses: snow-actions/composite-action-template@v1.0.0
-    with:
-      who-to-greet: Your name
+name: GitHub Discussions Notifier
+
+on:
+  discussion:
+    types: [created]
+  discussion_comment:
+    types: [created]
+    
+jobs:
+  notify-github-discussions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ostk0069/github-discussions-notifier@v0.0.1
+        with:
+          SLACK_CHANNEL_ID: <your slack channel id>
+          SLACK_BOT_TOKEN: <your slack bot token>
+          send-discussion: true
+          send-discussion-comment: false
 ```
-
-## Environment variables
-
-| Name | Description | Default | Required |
-| - | - | - | - |
-| `WHO_TO_GREET` | Who to greet | `World` | no |
 
 ## Inputs
 
@@ -38,15 +60,11 @@ See [action.yml](action.yml)
 
 | Name | Description | Default | Required |
 | - | - | - | - |
-| `who-to-greet` | Who to greet | `World` | yes |
+| `SLACK_CHANNEL_ID` | your slack channel id | - | yes |
+| `SLACK_BOT_TOKEN` | your slack bot token | - | yes |
+| `send-discussion` | send discussion notification? | false | no |
+| `send-discussion-comment` | send discussion comment notification? | true | no |
 
-## Outputs
-
-See [action.yml](action.yml)
-
-| Name | Description |
-| - | - |
-| `greet` | The word we greeted you |
 
 ## Supported
 
@@ -63,11 +81,8 @@ See [action.yml](action.yml)
 
 ### Events
 
-- Any
-<!--
-- `push`
-- `pull_request`
--->
+- `discussion: types: [created]`
+- `discussion_comment: types: [created]`
 
 ## Dependencies
 
