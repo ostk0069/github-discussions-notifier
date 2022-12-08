@@ -52,9 +52,10 @@ See [action.yml](action.yml)
 | - | - | - | - |
 | `SLACK_CHANNEL_ID` | your slack channel id | - | yes |
 | `SLACK_BOT_TOKEN` | your slack bot token | - | yes |
-| `send-discussion` | send discussion notification? | false | no |
+| `send-discussion` | send discussion notification? | true | no |
 | `send-discussion-comment` | send discussion comment notification? | true | no |
-
+| `unfurl-links` | Pass true to enable unfurling of primarily text-based content | false | no |
+| `unfurl-media` | Pass false to disable unfurling of media content | false | no |
 
 ## Supported
 
