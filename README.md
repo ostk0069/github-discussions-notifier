@@ -15,7 +15,7 @@ jobs:
   notify-github-discussions:
     runs-on: ubuntu-latest
     steps:
-      - uses: ostk0069/github-discussions-notifier@v0.0.1
+      - uses: ostk0069/github-discussions-notifier@v0.0.2
         with:
           SLACK_CHANNEL_ID: <your slack channel id>
           SLACK_BOT_TOKEN: <your slack bot token>
@@ -36,11 +36,11 @@ jobs:
   notify-github-discussions:
     runs-on: ubuntu-latest
     steps:
-      - uses: ostk0069/github-discussions-notifier@v0.0.1
+      - uses: ostk0069/github-discussions-notifier@v0.0.2
         with:
           SLACK_CHANNEL_ID: <your slack channel id>
           SLACK_BOT_TOKEN: <your slack bot token>
-          send-discussion: true
+          send-discussion-create: true
           send-discussion-comment: false
 ```
 
@@ -52,7 +52,7 @@ See [action.yml](action.yml)
 | - | - | - | - |
 | `SLACK_CHANNEL_ID` | your slack channel id | - | yes |
 | `SLACK_BOT_TOKEN` | your slack bot token | - | yes |
-| `send-discussion` | send discussion notification? | true | no |
+| `send-discussion-create` | send discussion notification? | true | no |
 | `send-discussion-comment` | send discussion comment notification? | true | no |
 | `unfurl-links` | Pass true to enable unfurling of primarily text-based content | false | no |
 | `unfurl-media` | Pass false to disable unfurling of media content | false | no |
