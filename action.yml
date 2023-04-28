@@ -76,8 +76,8 @@ runs:
           ],
           "unfurl_links": ${{ inputs.unfurl-links }},
           "unfurl_media": ${{ inputs.unfurl-media }}
-        }'
-        |curl -X POST -H 'Authorization: Bearer ${{ inputs.SLACK_BOT_TOKEN }}' -H "Content-Type: application/json" -d @- https://slack.com/api/chat.postMessage
+        }
+        '|curl -X POST -H 'Authorization: Bearer ${{ inputs.SLACK_BOT_TOKEN }}' -H "Content-Type: application/json" -d @- https://slack.com/api/chat.postMessage
       shell: bash
       env:
         DISCUSSION_URL: ${{ github.event.discussion.html_url }}
